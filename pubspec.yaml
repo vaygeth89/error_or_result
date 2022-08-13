@@ -1,6 +1,6 @@
 name: error_or_result
 description: Helper classes that returns a Result or Errors objects to reduce amount of exception throwing.
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/vaygeth89
 repository: https://github.com/vaygeth89/error_or_result
 
