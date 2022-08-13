@@ -1,6 +1,7 @@
-import 'package:error_or_result/src/error_or_value.dart';
+import 'package:error_or_result/src/error_or_value/error_or_value.dart';
 import 'package:test/test.dart';
 
+// Test the ErrorOrValue class
 void main() {
   group('A group of ErrorOr tests', () {
     setUp(() {
