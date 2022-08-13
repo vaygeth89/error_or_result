@@ -1,7 +1,7 @@
 import 'package:error_or_result/error_or_result.dart';
 import 'package:error_or_result/src/enums.dart';
 
-
+/// Base class for ErrorOrResult and ErrorOrValue
 class ErrorOr<TValue> {
   /// The [TValue] value that you expect to return when successful
   TValue? _result;
