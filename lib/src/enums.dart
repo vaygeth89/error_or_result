@@ -1,4 +1,5 @@
-/// Common error types
+// Common Enums
+/// Error types
 enum ErrorType {
   failure,
   unexpected,
