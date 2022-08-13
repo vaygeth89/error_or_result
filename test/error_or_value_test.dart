@@ -1,4 +1,4 @@
-import 'package:error_or_result/src/error_or_value/error_or_value.dart';
+import 'package:error_or_result/error_or_result.dart';
 import 'package:test/test.dart';
 
 // Test the ErrorOrValue class
