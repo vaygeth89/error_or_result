@@ -1,46 +1,14 @@
-import 'package:error_or_result/error_or_result.dart';
+
 import 'package:error_or_result/src/enums.dart';
 
+abstract class VResult {}
 
-class ErrorOr<TValue> {
-  /// The [TValue] value that you expect to return when successful
-  TValue? _result;
-  bool _isError = false;
-  final List<ErrorResult> _errors;
-
-  ErrorOr(this._result, this._isError, this._errors);
-
-  /// Pass single [ErrorResult] to create an ErrorOr with and set isError to true
-  factory ErrorOr.fromError(ErrorResult error) {
-    return ErrorOr(null, true, [error]);
-  }
-
-  /// Pass list of [ErrorResult] to create an ErrorOr with and set isError to true
-  factory ErrorOr.fromErrors(List<ErrorResult> errors) {
-    return ErrorOr(null, true, errors);
-  }
-
-  /// Pass [TValue] to create an ErrorOr with and set isError to false
-  factory ErrorOr.fromResult(TValue result) {
-    return ErrorOr(result, false, []);
-  }
-
-  bool get isError => _isError;
-  TValue get result => _result!;
-  List<ErrorResult> get errors => _errors;
-  ErrorResult get firstError => _errors.first;
-
-  @override
-  String toString() {
-    if (_isError) {
-      return 'ErrorOr<$TValue> {error: ${firstError.description}}';
-    }
-    return 'ErrorOr<$TValue> {result: $result}';
-  }
+class VSuccess<TValue> extends VResult {
+  final TValue value;
+  VSuccess(this.value);
 }
 
-/// The encapsulation of the error details
-class ErrorResult {
+class VFailure extends VResult {
   /// The error code is used to identify the error, for example a domain error code when use inputs invalid credentials upon sign in
   final String code;
 
@@ -49,65 +17,94 @@ class ErrorResult {
 
   /// The general category of the error, for example validation error when user inputs invalid credentials
   final ErrorType type;
-  const ErrorResult({
+  VFailure({
     required this.code,
     required this.description,
     required this.type,
   });
 
+  factory VFailure.fromError(VFailure error) {
+    return VFailure(
+      code: error.code,
+      description: error.description,
+      type: error.type,
+    );
+  }
+
   /// Generic Errors that works for most of the use cases
-  factory ErrorResult.failure(
+  factory VFailure.failure(
       {String code = "General.Failure",
       String description = "A failure has occured."}) {
-    return ErrorResult(
+    return VFailure(
       code: code,
       description: description,
       type: ErrorType.failure,
     );
   }
-  factory ErrorResult.unexpected(
+  factory VFailure.unexpected(
       {String code = "General.Unexpected",
       String description = "An unexpected error has occured."}) {
-    return ErrorResult(
+    return VFailure(
       code: code,
       description: description,
       type: ErrorType.failure,
     );
   }
-  factory ErrorResult.validation(
+  factory VFailure.validation(
       {String code = "General.Validation",
       String description = "A validation error has occured."}) {
-    return ErrorResult(
+    return VFailure(
       code: code,
       description: description,
       type: ErrorType.failure,
     );
   }
-  factory ErrorResult.conflict(
+  factory VFailure.conflict(
       {String code = "General.Conflict",
       String description = "A conflict error has occured."}) {
-    return ErrorResult(
+    return VFailure(
       code: code,
       description: description,
       type: ErrorType.failure,
     );
   }
-  factory ErrorResult.notFound(
+  factory VFailure.notFound(
       {String code = "General.NotFound",
       String description = "A 'Not Found' error has occured."}) {
-    return ErrorResult(
+    return VFailure(
       code: code,
       description: description,
       type: ErrorType.failure,
     );
   }
-  factory ErrorResult.notAllowed(
+  factory VFailure.notAllowed(
       {String code = "General.NotAllowed",
       String description = "A 'Not Allowed' error has occured."}) {
-    return ErrorResult(
+    return VFailure(
       code: code,
       description: description,
       type: ErrorType.failure,
     );
+  }
+}
+
+class ErrorOrValue<T> {
+  final bool isError;
+  final List<VResult> _result;
+
+  T get result => (_result.first as VSuccess<T>).value;
+
+  List<VFailure> get errors => isError ? _result as List<VFailure> : [];
+
+  ErrorOrValue(this.isError, this._result);
+
+  /// Pass list of [ErrorResult] to create an ErrorOr with and set isError to true
+  factory ErrorOrValue.fromErrors(List<VFailure> errors) {
+    return ErrorOrValue<T>(true, errors);
+  }
+
+  /// Pass [TValue] to create an ErrorOr with and set isError to false
+  factory ErrorOrValue.fromResult(T result) {
+    return ErrorOrValue<T>(false, [VSuccess<T>(result)]);
   }
 }
