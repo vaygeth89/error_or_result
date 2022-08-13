@@ -1,4 +1,5 @@
-import 'package:error_or_result/error_or_result.dart';
+import 'package:error_or_result/src/error_or_result/error_or_result.dart';
+import 'package:error_or_result/src/error_or_value/error_or_value.dart';
 
 class Employee {
   int id;
