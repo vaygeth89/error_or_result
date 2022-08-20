@@ -25,7 +25,8 @@ class ErrorOr<TValue> {
   }
 
   bool get isError => _isError;
-  TValue get result => _result!;
+  TValue get result =>
+      _result == null ? throw Exception("TValue null") : _result!;
   List<ErrorResult> get errors => _errors;
   ErrorResult get firstError => _errors.first;
 
